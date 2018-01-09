@@ -1,0 +1,16 @@
+{
+  "name": "kchoo-twitter",
+  "version": "0.0.1",
+  "description": "A wrapper around twitter-node-client, exposing an API more suited for kchoo projects",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kchoo/twitter.git"
+  },
+  "author": "kchoo",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/kchoo/twitter/issues"
+  },
+  "homepage": "https://github.com/kchoo/twitter#readme"
+}
