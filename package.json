@@ -12,8 +12,5 @@
   "bugs": {
     "url": "https://github.com/kchoo/twitter/issues"
   },
-  "homepage": "https://github.com/kchoo/twitter#readme",
-  "dependencies": {
-    "twitter-node-client": "0.0.6"
-  }
+  "homepage": "https://github.com/kchoo/twitter#readme"
 }
