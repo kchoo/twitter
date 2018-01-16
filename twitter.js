@@ -5,8 +5,8 @@ const $q = require('./q');
 const baseRequestUrl = 'https://api.twitter.com/1.1';
 
 function KchooTwitter(
-	id,
 	{
+		id,
 		consumerKey,
 		consumerSecret,
 		accessToken,
