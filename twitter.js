@@ -4,16 +4,14 @@ const $q = require('./q');
 
 const baseRequestUrl = 'https://api.twitter.com/1.1';
 
-function KchooTwitter(
-	{
-		id,
-		consumerKey,
-		consumerSecret,
-		accessToken,
-		accessTokenSecret,
-		callBackUrl = null
-	}
-) {
+function KchooTwitter({
+	id,
+	consumerKey,
+	consumerSecret,
+	accessToken,
+	accessTokenSecret,
+	callBackUrl = null
+}) {
 	this.id = id;
 
 	this.accessToken = accessToken;
@@ -55,9 +53,9 @@ module.exports = KchooTwitter;
 function handleOAuthCallback(deferred) {
 	return function (err, body, response) {
 		if (err || response.statusCode !== 200) {
-			deferred.reject([err, body]);
+			deferred.reject([err, JSON.parse(body)]);
 		} else {
-			deferred.resolve(body);
+			deferred.resolve(JSON.parse(body));
 		}
 	};
 }
@@ -73,8 +71,7 @@ function performGET(url) {
 			handleOAuthCallback(deferred)
 		);
 
-	return deferred.promise.
-		then(JSON.parse);
+	return deferred.promise;
 }
 
 function performPOST(url, body) {
