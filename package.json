@@ -14,6 +14,7 @@
   },
   "homepage": "https://github.com/kchoo/twitter#readme",
   "dependencies": {
+    "oauth": "^0.9.15",
     "kchoo-q": "^1.0.2"
   }
 }
