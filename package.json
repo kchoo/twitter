@@ -12,5 +12,8 @@
   "bugs": {
     "url": "https://github.com/kchoo/twitter/issues"
   },
-  "homepage": "https://github.com/kchoo/twitter#readme"
+  "homepage": "https://github.com/kchoo/twitter#readme",
+  "dependencies": {
+    "kchoo-q": "^1.0.2"
+  }
 }
