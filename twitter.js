@@ -1,6 +1,6 @@
 // external dependencies
 const OAuth = require('oauth').OAuth;
-const $q = require('./q');
+const $q = require('kchoo-q');
 
 function KchooTwitter({
 	id,
