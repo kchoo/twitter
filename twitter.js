@@ -2,8 +2,6 @@
 const OAuth = require('oauth').OAuth;
 const $q = require('./q');
 
-const baseRequestUrl = 'https://api.twitter.com/1.1';
-
 function KchooTwitter({
 	id,
 	consumerKey,
@@ -33,11 +31,13 @@ function KchooTwitter({
 	}
 }
 
+KchooTwitter.prototype.baseRequestUrl = 'https://api.twitter.com/1.1';
+
 KchooTwitter.prototype.addFriend = function (user_id) {
 	return performPOST.
 		call(
 			this,
-			`${baseRequestUrl}/friendships/create.json`,
+			`${this.baseRequestUrl}/friendships/create.json`,
 			{
 				user_id,
 				follow: true
