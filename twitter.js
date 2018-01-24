@@ -89,3 +89,20 @@ function performPOST(url, body) {
 
 	return deferred.promise;
 }
+
+function decrementString(s) {
+	const parsedS = parseInt(s, 10);
+
+	if (parsedS <= Number.MAX_SAFE_INTEGER) {
+		return parsedS - 1;
+	}
+
+	const moreSignificant = s.slice(0,-15);
+	const lessSignificant = parseInt(s.slice(-15), 10);
+
+	if (lessSignificant === 0) {
+		return String(parseInt(moreSignificant, 10) - 1) + '999999999999999';
+	}
+
+	return moreSignificant + String(lessSignificant - 1);
+}
