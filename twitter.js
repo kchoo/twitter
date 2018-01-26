@@ -32,12 +32,15 @@ function KchooTwitter({
 }
 
 KchooTwitter.prototype.baseRequestUrl = 'https://api.twitter.com/1.1';
+KchooTwitter.prototype.baseMediaUrl = 'http://pbs.twimg.com/';
 
+// user_id is the id of the twitter user we want to befriend
+// must be a string because JS doesn't have 64-bit ints
 KchooTwitter.prototype.addFriend = function (user_id) {
 	return performPOST.
 		call(
 			this,
-			`${this.baseRequestUrl}/friendships/create.json`,
+			'/friendships/create.json',
 			{
 				user_id,
 				follow: true
@@ -46,6 +49,29 @@ KchooTwitter.prototype.addFriend = function (user_id) {
 		then(function ({id_str}) {
 			return id_str;
 		});
+};
+
+KchooTwitter.prototype.getMedia = function ({
+	twitterID,
+	from = null,
+	to = null
+}) {
+	const deferred = $q.defer();
+
+	performGET.
+		call(
+			this,
+			'/statuses/user_timeline.json',
+			{
+				user_id: twitterID,
+				count: 200,
+				since_id: from,
+				max_id: to
+			}
+		).
+		then(getImagesFromTweets);
+
+	return deferred.promise;
 };
 
 module.exports = KchooTwitter;
@@ -60,12 +86,12 @@ function handleOAuthCallback(deferred) {
 	};
 }
 
-function performGET(url) {
+function performGET(url, body) {
 	const deferred = $q.defer();
 
 	this.oauth.
 		get(
-			url,
+			url + buildQueryString(body),
 			this.accessToken,
 			this.accessTokenSecret,
 			handleOAuthCallback(deferred)
@@ -79,7 +105,7 @@ function performPOST(url, body) {
 
 	this.oauth.
 		post(
-			url,
+			this.baseRequestUrl + url,
 			this.accessToken,
 			this.accessTokenSecret,
 			body,
@@ -90,19 +116,45 @@ function performPOST(url, body) {
 	return deferred.promise;
 }
 
-function decrementString(s) {
-	const parsedS = parseInt(s, 10);
+function buildQueryString(obj) {
+	const arr = [];
 
-	if (parsedS <= Number.MAX_SAFE_INTEGER) {
-		return parsedS - 1;
+	for(const prop in obj) {
+		if(obj[prop] === null) {
+			continue;
+		}
+
+		arr.push(
+			encodeURIComponent(prop) +
+			'=' +
+			encodeURIComponent(obj[prop])
+		);
 	}
 
-	const moreSignificant = s.slice(0,-15);
-	const lessSignificant = parseInt(s.slice(-15), 10);
+	return '?' + arr.join('&');
+}
 
-	if (lessSignificant === 0) {
-		return String(parseInt(moreSignificant, 10) - 1) + '999999999999999';
+function getImagesFromTweets(tweets) {
+	const urls = [];
+
+	if(tweets.length === 0) {
+		return {};
 	}
 
-	return moreSignificant + String(lessSignificant - 1);
+	for (const tweet of tweets) {
+		if (
+			tweet.extended_entities &&
+			tweet.extended_entities.media
+		) {
+			for(const {media_url} of tweet.extended_entities.media) {
+				urls.push(media_url);
+			}
+		}
+	}
+
+	return {
+		first: tweets[0].id_str,
+		urls,
+		last: tweets[tweets.length - 1].id_str
+	};
 }
