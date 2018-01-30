@@ -17,7 +17,9 @@ const twitter = new Twitter({
 });
 
 twitter.addFriend(id);
-twitter.getFriendIDs();
-twitter.getMostRecentTweetsForFriend(friendID, sinceID);
-twitter.getAllAvailableTweetsForFriend(friendID);
+twitter.getMedia({
+	twitterID,
+	from,
+	to
+});
 ```
