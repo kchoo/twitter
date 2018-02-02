@@ -69,7 +69,8 @@ KchooTwitter.prototype.getMedia = function ({
 				max_id: to
 			}
 		).
-		then(getImagesFromTweets);
+		then(getImagesFromTweets).
+		then(deferred.resolve.bind(deferred));
 
 	return deferred.promise;
 };
@@ -77,7 +78,7 @@ KchooTwitter.prototype.getMedia = function ({
 module.exports = KchooTwitter;
 
 function handleOAuthCallback(deferred) {
-	return function (err, body, response) {
+	return function (err, body = '{}', response) {
 		if (err || response.statusCode !== 200) {
 			deferred.reject([err, JSON.parse(body)]);
 		} else {
@@ -91,7 +92,7 @@ function performGET(url, body) {
 
 	this.oauth.
 		get(
-			url + buildQueryString(body),
+			this.baseRequestUrl + url + buildQueryString(body),
 			this.accessToken,
 			this.accessTokenSecret,
 			handleOAuthCallback(deferred)
